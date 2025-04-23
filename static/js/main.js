@@ -210,4 +210,61 @@ function showAlert(message, type) {
     setTimeout(() => {
         alertDiv.remove();
     }, 5000);
-} 
+}
+
+// 加载历史文件列表
+async function loadHistoryFiles() {
+    try {
+        const response = await fetch('/get_history_files');
+        const data = await response.json();
+        
+        if (response.ok) {
+            const select = document.getElementById('historyFiles');
+            // 清空现有选项
+            select.innerHTML = '<option value="">请选择历史文件</option>';
+            
+            // 添加历史文件选项
+            data.files.forEach(file => {
+                const option = document.createElement('option');
+                option.value = file;
+                option.textContent = file;
+                select.appendChild(option);
+            });
+        } else {
+            showAlert(data.error, 'danger');
+        }
+    } catch (error) {
+        showAlert('获取历史文件列表失败：' + error.message, 'danger');
+    }
+}
+
+// 页面加载时获取历史文件列表
+document.addEventListener('DOMContentLoaded', loadHistoryFiles);
+
+// 监听历史文件选择变化
+document.getElementById('historyFiles').addEventListener('change', async (e) => {
+    const selectedFile = e.target.value;
+    if (!selectedFile) return;
+    
+    try {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        
+        const response = await fetch('/upload', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            devices = data.devices;
+            updateCabinetSelect();
+            showAlert('文件加载成功', 'success');
+        } else {
+            showAlert(data.error, 'danger');
+        }
+    } catch (error) {
+        showAlert('加载文件失败：' + error.message, 'danger');
+    }
+}); 
