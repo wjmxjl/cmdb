@@ -44,36 +44,18 @@ source .venv/bin/activate  # Linux/Mac
 pip install -r requirements.txt
 ```
 
-### 4. 初始化数据库
-
-```bash
-flask init-db
-```
-
 ### 5. 运行应用
 
 ```bash
-flask run
+python app.py
 ```
 
-## Docker 部署
 
-1. 构建镜像：
-```bash
-docker build -t cmdb .
-```
-
-2. 运行容器：
-```bash
-docker run -d -p 5000:5000 --name cmdb cmdb
-```
 
 ## 使用说明
 
 1. 访问 `http://localhost:5000` 进入系统
-2. 默认管理员账号：
-   - 用户名：admin
-   - 密码：admin123
+
 
 ## 目录结构
 
